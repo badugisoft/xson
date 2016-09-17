@@ -1,0 +1,30 @@
+<Data>
+  <Persons>
+    <FirstName>Liam</FirstName>
+    <LastName>Neeson</LastName>
+    <Age>64</Age>
+  </Persons>
+  <Persons>
+    <FirstName>Tom</FirstName>
+    <LastName>Cruise</LastName>
+    <Age>53</Age>
+  </Persons>
+  <Persons>
+    <FirstName>Conan</FirstName>
+    <LastName>O&#39;Brien</LastName>
+    <Age>52</Age>
+  </Persons>
+  <SocialNetworks>
+    <Name>Twitter</Name>
+    <URL>https://www.twitter.com</URL>
+  </SocialNetworks>
+  <SocialNetworks>
+    <Name>Facebook</Name>
+    <URL>https://www.facebook.com/</URL>
+  </SocialNetworks>
+  <Variables>
+    <StrValue>Some text</StrValue>
+    <IntValue>1997</IntValue>
+    <BoolValue>false</BoolValue>
+  </Variables>
+</Data>

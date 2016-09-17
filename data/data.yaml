@@ -1,0 +1,19 @@
+persons:
+- firstname: Liam
+  lastname: Neeson
+  age: 64
+- firstname: Tom
+  lastname: Cruise
+  age: 53
+- firstname: Conan
+  lastname: O'Brien
+  age: 52
+socialnetworks:
+- name: Twitter
+  url: https://www.twitter.com
+- name: Facebook
+  url: https://www.facebook.com/
+variables:
+  strvalue: Some text
+  intvalue: 1997
+  boolvalue: false

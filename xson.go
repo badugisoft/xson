@@ -65,6 +65,10 @@ func GetType(filenameOrExtension string) Type {
 	return UNKNOWN
 }
 
+func GetTypes() []Type {
+	return []Type{JSON, YAML, XML}
+}
+
 func Marshal(t Type, v interface{}) ([]byte, error) {
 	marshaller, found := marshallers[t]
 	if !found {
