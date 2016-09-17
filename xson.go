@@ -54,7 +54,7 @@ var (
 
 func GetType(filenameOrExtension string) Type {
 	filename := strings.ToLower(filenameOrExtension)
-	extension := filepath.Ext(filenameOrExtension)
+	extension := filepath.Ext(filename)
 	for t, m := range marshallers {
 		for _, e := range m.Extesions {
 			if e == filename || e == extension {
