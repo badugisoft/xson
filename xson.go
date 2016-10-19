@@ -1,11 +1,14 @@
 package xson
 
 import (
+	"bytes"
 	"encoding/json"
 	"encoding/xml"
 	"errors"
 	"path/filepath"
 	"strings"
+
+	"github.com/BurntSushi/toml"
 
 	yaml "gopkg.in/yaml.v2"
 )
@@ -17,6 +20,7 @@ const (
 	JSON
 	YAML
 	XML
+	TOML
 )
 
 type Marshaller struct {
@@ -49,6 +53,19 @@ var (
 			Unmarshal:     xml.Unmarshal,
 			Extesions:     []string{"xml"},
 		},
+		TOML: Marshaller{
+			Marshal: func(v interface{}) ([]byte, error) {
+				var b bytes.Buffer
+				err := toml.NewEncoder(&b).Encode(v)
+				if err != nil {
+					return nil, err
+				}
+				return b.Bytes(), nil
+			},
+			MarshalIndent: nil,
+			Unmarshal:     toml.Unmarshal,
+			Extesions:     []string{"toml"},
+		},
 	}
 )
 
@@ -66,7 +83,7 @@ func GetType(filenameOrExtension string) Type {
 }
 
 func GetTypes() []Type {
-	return []Type{JSON, YAML, XML}
+	return []Type{JSON, YAML, XML, TOML}
 }
 
 func Marshal(t Type, v interface{}) ([]byte, error) {

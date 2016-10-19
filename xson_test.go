@@ -14,6 +14,7 @@ func TestMarshal(t *testing.T) {
 		xson.JSON: "data/data.json",
 		xson.YAML: "data/data.yaml",
 		xson.XML:  "data/data.xml",
+		xson.TOML: "data/data.toml",
 	}
 
 	for tp, file := range types {
@@ -49,6 +50,7 @@ func TestUnmarshal(t *testing.T) {
 		xson.JSON: "data/data.json",
 		xson.YAML: "data/data.yaml",
 		xson.XML:  "data/data.xml",
+		xson.TOML: "data/data.toml",
 	}
 
 	for tp, file := range types {

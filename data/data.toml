@@ -1,0 +1,27 @@
+[[Persons]]
+  FirstName = "Liam"
+  LastName = "Neeson"
+  Age = 64
+
+[[Persons]]
+  FirstName = "Tom"
+  LastName = "Cruise"
+  Age = 53
+
+[[Persons]]
+  FirstName = "Conan"
+  LastName = "O'Brien"
+  Age = 52
+
+[[SocialNetworks]]
+  Name = "Twitter"
+  URL = "https://www.twitter.com"
+
+[[SocialNetworks]]
+  Name = "Facebook"
+  URL = "https://www.facebook.com/"
+
+[Variables]
+  StrValue = "Some text"
+  IntValue = 1997
+  BoolValue = false
