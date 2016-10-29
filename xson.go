@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"errors"
-	"path/filepath"
+	"reflect"
 	"strings"
 
 	"github.com/BurntSushi/toml"
@@ -21,6 +21,8 @@ const (
 	YAML
 	XML
 	TOML
+	FLAT_JSON
+	FLAT_YAML
 )
 
 type Marshaller struct {
@@ -66,24 +68,119 @@ var (
 			Unmarshal:     toml.Unmarshal,
 			Extesions:     []string{"toml"},
 		},
+		FLAT_JSON: Marshaller{
+			Marshal:       nil,
+			MarshalIndent: nil,
+			Unmarshal: func(data []byte, v interface{}) error {
+				tmp := map[interface{}]interface{}{}
+				err := json.Unmarshal(data, &tmp)
+				if err != nil {
+					return err
+				}
+
+				err = unflatten(&tmp)
+				if err != nil {
+					return err
+				}
+
+				d, err := json.Marshal(tmp)
+				if err != nil {
+					return err
+				}
+
+				return json.Unmarshal(d, v)
+			},
+			Extesions: []string{"flat.json"},
+		},
+		FLAT_YAML: Marshaller{
+			Marshal:       nil,
+			MarshalIndent: nil,
+			Unmarshal: func(data []byte, v interface{}) error {
+				tmp := map[interface{}]interface{}{}
+				err := yaml.Unmarshal(data, &tmp)
+				if err != nil {
+					return err
+				}
+
+				err = unflatten(&tmp)
+				if err != nil {
+					return err
+				}
+
+				d, err := yaml.Marshal(tmp)
+				if err != nil {
+					return err
+				}
+
+				return yaml.Unmarshal(d, v)
+			},
+			Extesions: []string{"flat.yaml", "flat.yml"},
+		},
 	}
 )
 
+func unflatten(m *map[interface{}]interface{}) error {
+	for k, v := range *m {
+		kk := k.(string)
+		if strings.Contains(kk, ".") {
+			kind := reflect.TypeOf(v).Kind()
+			if kind == reflect.Map {
+				vv := v.(map[interface{}]interface{})
+				err := unflatten(&vv)
+				if err != nil {
+					return err
+				}
+				v = vv
+			}
+
+			p := *m
+			tokens := strings.Split(kk, ".")
+			for i, token := range tokens {
+				if i == len(tokens)-1 {
+					p[token] = v
+				} else {
+					if _, found := p[token]; !found {
+						p[token] = map[interface{}]interface{}{}
+					}
+					p, _ = p[token].(map[interface{}]interface{})
+				}
+			}
+
+			delete(*m, k)
+		}
+	}
+	return nil
+}
+
 func GetType(filenameOrExtension string) Type {
-	filename := strings.ToLower(filenameOrExtension)
-	extension := filepath.Ext(filename)
+	lowerName := strings.ToLower(filenameOrExtension)
+	maxExtLen, tp := 0, UNKNOWN
+
 	for t, m := range marshallers {
 		for _, e := range m.Extesions {
-			if e == filename || e == extension {
-				return t
+			if e == lowerName || strings.HasSuffix(lowerName, "."+e) {
+				extLen := len(e)
+				if extLen > maxExtLen {
+					tp = t
+					maxExtLen = extLen
+				}
+				break
 			}
 		}
 	}
-	return UNKNOWN
+	return tp
 }
 
 func GetTypes() []Type {
-	return []Type{JSON, YAML, XML, TOML}
+	return []Type{JSON, YAML, XML, TOML, FLAT_JSON, FLAT_YAML}
+}
+
+func GetExtensions(t Type) []string {
+	marshaller, found := marshallers[t]
+	if !found {
+		return []string{}
+	}
+	return marshaller.Extesions[:]
 }
 
 func Marshal(t Type, v interface{}) ([]byte, error) {

@@ -47,10 +47,11 @@ func TestMarshalIndent(t *testing.T) {
 
 func TestUnmarshal(t *testing.T) {
 	types := map[xson.Type]string{
-		xson.JSON: "data/data.json",
-		xson.YAML: "data/data.yaml",
-		xson.XML:  "data/data.xml",
-		xson.TOML: "data/data.toml",
+		xson.JSON:      "data/data.json",
+		xson.YAML:      "data/data.yaml",
+		xson.FLAT_YAML: "data/data.flat.yaml",
+		xson.XML:       "data/data.xml",
+		xson.TOML:      "data/data.toml",
 	}
 
 	for tp, file := range types {
